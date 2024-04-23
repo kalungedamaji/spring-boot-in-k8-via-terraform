@@ -22,6 +22,7 @@ resource "kubernetes_replication_controller" "hello_world" {
   }
 
   spec {
+   replicas = 1
    selector = {
      test = "HelloWorldExample"
     }
@@ -35,8 +36,8 @@ resource "kubernetes_replication_controller" "hello_world" {
        }
       spec {
         container {
-          image = "bibindev/spring-boot-in-k8-via-terraform:latest"
-          name  = "sample"
+          image = "dkalunge/spring-boot-in-k8-via-terraform:latest"
+          name  = "hello-service"
 
           port {
             container_port = 8080
@@ -53,8 +54,12 @@ resource "kubernetes_replication_controller" "hello_world" {
             }
           }
         }
+        container {
+            name  = "nginx-sidecar"
+            image = "dkalunge/nginx-sidecar:latest"
       }
     }
+  }
   }
   }
 

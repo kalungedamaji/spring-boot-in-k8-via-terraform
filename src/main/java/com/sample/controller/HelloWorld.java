@@ -10,4 +10,12 @@ public class HelloWorld {
   public String hello() {
     return "Hello, World!";
   }
+
+  @GetMapping(value = "/intercept")
+  public String intercept() {
+    System.out.println("Intercepted");
+    return "Intercepted the request";
+  }
+
+
 }
