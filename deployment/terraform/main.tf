@@ -40,7 +40,7 @@ resource "kubernetes_replication_controller" "hello_world" {
           name  = "hello-service"
 
           port {
-            container_port = 8080
+            container_port = 8081
           }
 
           resources {
@@ -55,6 +55,9 @@ resource "kubernetes_replication_controller" "hello_world" {
           }
         }
         container {
+        port {
+                container_port = 8080
+                }
             name  = "nginx-sidecar"
             image = "dkalunge/nginx-sidecar:latest"
       }
@@ -74,11 +77,15 @@ resource "kubernetes_service" "hello_world" {
        test = "HelloWorldExample"
     }
     port {
-      name        = "http"
+      name        = "ngnix"
       port        = 8080
       target_port = 8080
     }
-
+    port {
+         name        = "service"
+         port        = 8081
+         target_port = 8081
+       }
     type = "NodePort"
   }
 }
