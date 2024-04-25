@@ -14,26 +14,26 @@ resource "kubernetes_namespace" "sample" {
 
 resource "kubernetes_replication_controller" "hello_world" {
   metadata {
-    name = "scalable-hello-world-example"
-    namespace = "${kubernetes_namespace.sample.metadata.0.name}"
+    name      = "scalable-hello-world-example"
+    namespace = kubernetes_namespace.sample.metadata.0.name
     labels = {
       App = "HelloWorldExample"
     }
   }
 
   spec {
-   replicas = 1
-   selector = {
-     test = "HelloWorldExample"
+    replicas = 1
+    selector = {
+      test = "HelloWorldExample"
     }
 
 
     template {
       metadata {
-       labels = {
-       test = "HelloWorldExample"
-       }
-       }
+        labels = {
+          test = "HelloWorldExample"
+        }
+      }
       spec {
         container {
           image = "dkalunge/spring-boot-in-k8-via-terraform:latest"
@@ -55,37 +55,39 @@ resource "kubernetes_replication_controller" "hello_world" {
           }
         }
         container {
-        port {
-                container_port = 8080
-                }
-            name  = "nginx-sidecar"
-            image = "dkalunge/nginx-sidecar:latest"
+          port {
+            container_port = 8080
+          }
+
+          name  = "envoy-sidecar"
+          image = "sauravkumarsahoo/envoy-sidecar:v5"
+          image_pull_policy = "Always"
+        }
       }
     }
   }
-  }
-  }
+}
 
 
 resource "kubernetes_service" "hello_world" {
   metadata {
-    name = "hello-world-service-example"
-    namespace = "${kubernetes_namespace.sample.metadata.0.name}"
+    name      = "hello-world-service-example"
+    namespace = kubernetes_namespace.sample.metadata.0.name
   }
   spec {
     selector = {
-       test = "HelloWorldExample"
+      test = "HelloWorldExample"
     }
     port {
-      name        = "ngnix"
+      name        = "envoy"
       port        = 8080
       target_port = 8080
     }
     port {
-         name        = "service"
-         port        = 8081
-         target_port = 8081
-       }
+      name        = "service"
+      port        = 8081
+      target_port = 8081
+    }
     type = "NodePort"
   }
 }
