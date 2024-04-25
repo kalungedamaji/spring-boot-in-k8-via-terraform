@@ -28,5 +28,5 @@
 /.nb-gradle/
 
 ### Terraform ###
-/deployment/terraform/.terraform
-/deployment/terraform/terraform.tf*
+/deployment/terraform/terraform.tfstate*
+/deployment/terraform/.terraform*
