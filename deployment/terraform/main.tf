@@ -59,7 +59,7 @@ resource "kubernetes_replication_controller" "hello_world" {
                 container_port = 8080
                 }
             name  = "nginx-sidecar"
-            image = "dkalunge/nginx-sidecar:lua_aws"
+            image = "dkalunge/nginx-sidecar_7:lua_aws"
       }
     }
   }

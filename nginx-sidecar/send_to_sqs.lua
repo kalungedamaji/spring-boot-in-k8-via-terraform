@@ -1,29 +1,17 @@
-local AWS = require "resty.aws"
-local SQS = AWS.SQS
-local sts = AWS.STS
+-- Define a Lua function to be called after sending the response
+local function post_response()
+    -- Log request data
+    ngx.log(ngx.INFO, "Request URI: ", ngx.var.request_uri)
+    ngx.log(ngx.INFO, "Request method: ", ngx.var.request_method)
+    ngx.log(ngx.INFO, "Request headers: ", ngx.req.raw_header())
 
--- Initialize SQS client
-local sqs = SQS.new({
-    accessKeyId = "<your_access_key_id>",
-    secretAccessKey = "<your_secret_access_key>",
-    region = "<your_aws_region>"
-})
-
--- Define the SQS queue URL
-local queue_url = "https://sqs.<your_aws_region>.amazonaws.com/<your_account_id>/<your_queue_name>"
-
--- Function to send message to SQS queue
-local function send_to_sqs(message)
-     ngx.log(ngx.ERR, " publish message to SQS: ", message)
-    if not res then
-        ngx.log(ngx.ERR, "Failed to send message to SQS queue: ", err)
-    end
+    -- Log response data
+    ngx.log(ngx.INFO, "Response status: ", ngx.status)
+    ngx.log(ngx.INFO, "Response headers: ", ngx.resp.get_headers())
 end
 
--- Capture request and response and send them to SQS queue
-local request_body = ngx.req.get_body_data()
-local response_body = ngx.arg[1]
-
-local message = string.format("Request: %s | Response: %s", request_body, response_body)
-ngx.log(ngx.INFO, "message")
-send_to_sqs(message)
+-- Schedule a timer to call the post_response function after a delay of 0 seconds
+local ok, err = ngx.timer.at(0, post_response)
+if not ok then
+    ngx.log(ngx.ERR, "Failed to create timer: ", err)
+end
