@@ -1,7 +1,11 @@
 package com.sample.controller;
 
+import java.util.Map;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,9 +18,10 @@ public class HelloWorld {
   }
 
   @GetMapping(value = "/intercept")
-  public String intercept() {
+  public ResponseEntity<Map<String, String>>  intercept(@RequestHeader Map<String, String> headers) {
 
-    System.out.println("Intercepted");
+    // Log the request headers
+    headers.forEach((key, value) -> System.out.println(key + ": " + value));
 
     RestTemplate restTemplate = new RestTemplate();
     String helloResourceUrl
@@ -24,7 +29,7 @@ public class HelloWorld {
     ResponseEntity<String> response
             = restTemplate.getForEntity(helloResourceUrl , String.class);
         // publish message to queue
-    return response.getBody();
+    return ResponseEntity.ok(headers);
   }
 
 
