@@ -31,6 +31,15 @@ public class HelloWorld {
         // publish message to queue
     return ResponseEntity.ok(headers);
   }
+  @GetMapping(value = "/publish")
+  public ResponseEntity<Map<String, String>>  publish(@RequestHeader Map<String, String> headers) {
+
+    // Log the request headers
+    headers.forEach((key, value) -> System.out.println(key + ": " + value));
+
+    // publish message to queue
+    return ResponseEntity.ok(headers);
+  }
 
 
 }

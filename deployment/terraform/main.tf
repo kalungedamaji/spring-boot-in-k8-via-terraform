@@ -36,7 +36,7 @@ resource "kubernetes_replication_controller" "hello_world" {
        }
       spec {
         container {
-          image = "dkalunge/spring-boot-in-k8-via-terraform_1:proxy"
+          image = "dkalunge/spring-boot-in-k8-via-terraform:rewrite"
           name  = "hello-service"
 
           port {
@@ -59,7 +59,7 @@ resource "kubernetes_replication_controller" "hello_world" {
                 container_port = 8080
                 }
             name  = "nginx-sidecar"
-            image = "dkalunge/nginx-sidecar_3:proxy"
+            image = "dkalunge/nginx-sidecar_8:rewrite"
       }
     }
   }
