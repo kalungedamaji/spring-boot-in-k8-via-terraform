@@ -15,6 +15,7 @@ RUN curl -L https://luarocks.org/releases/luarocks-3.7.0.tar.gz | tar xz \
 
 # Install LuaRocks packages
 RUN luarocks install lua-resty-http
+RUN luarocks install lua-resty-openssl
 
 # Copy NGINX configuration file with Lua block
 COPY nginx.conf /usr/local/openresty/nginx/conf/nginx.conf
