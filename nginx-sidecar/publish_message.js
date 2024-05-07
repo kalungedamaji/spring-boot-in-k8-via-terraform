@@ -4,7 +4,7 @@ function capture_resp_send_client_sqs(res, data, flags) {
     var response_body_arr = new Array();
     response_body_arr.push(data);
     console.log("Response body: "+JSON.stringify(response_body_arr.join('')));
-    req.sendBuffer(data, flags);
+    res.sendBuffer(data, flags);
     console.log(" sending message to Queue")
 
 }
