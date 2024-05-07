@@ -1,7 +1,7 @@
 var request;
 var requestObj;
 function cap_req(req,data, flags) {
-    console.log("Nginx Request object: " + req);
+   // console.log("Nginx Request object: " + req);
     console.log("Nginx Request object: " + JSON.stringify(req, null, 2));
     var response_body_arr = new Array();
     response_body_arr.push(data);
@@ -11,8 +11,8 @@ function cap_req(req,data, flags) {
     //request = JSON.parse(ngx.var.request_object);
     //console.log("ngx: " + ngx.location);
     //console.log(" ngx.location: " + ngx.location);
-    console.log("req.ngx: " + req.ngx);
-    console.log("req.uri: " + req.uri);
+   // console.log("req.ngx: " + req.ngx);
+   // console.log("req.uri: " + req.uri);
 
 
     // Return undefined to continue with the original response
