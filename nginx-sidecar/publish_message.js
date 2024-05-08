@@ -7,14 +7,13 @@ function capture_resp_send_client_sqs(res, data, flags) {
         console.log("Response body: " + JSON.stringify(response_body_arr.join('')));
         res.sendBuffer(data, flags);
         console.log(" sending message to Queue")
-        send_message_to_sqs(response_body_arr).then(function(sqsResponse) {
-            console.log("SQS message sent successfully:", sqsResponse);
-            // Potentially handle successful SQS interaction
-        }).catch(function(error) {
-            console.error('Error sending message to SQS:', error);
-        });
+        ngx.location.capture('/send_to_sqs', { args: { sqs_message: sqsMessage } });
         response_body_arr = [];
     }
+}
+function send_message(req) {
+    console.log("Input Argument", req);
+    console.log("Input Argument", JSON.stringify(req, null, 2));
 }
 
 function send_message_to_sqs(messageBody) {
@@ -56,4 +55,4 @@ function send_message_to_sqs(messageBody) {
         });
     });
 }
-export default { capture_resp_send_client_sqs };
+export default { capture_resp_send_client_sqs, send_message };
