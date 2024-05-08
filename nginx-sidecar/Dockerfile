@@ -1,41 +1,40 @@
-# Base image (consider using a minimal image like alpine)
-FROM nginx:alpine AS base
+# Base image
+FROM ubuntu:latest AS base
 
-# Remove existing Nginx binary
-RUN rm -rf /etc/nginx
+# Install necessary packages
+RUN apt-get update && apt-get install -y \
+    wget \
+    build-essential \
+    libpcre3-dev \
+    zlib1g-dev \
+    libssl-dev \
+    perl \
+    libxml2-dev \
+    libxslt-dev \
+ && rm -rf /var/lib/apt/lists/*
 
-# Download and extract NGINX source (version 1.9.5)
-RUN wget https://nginx.org/download/nginx-1.9.5.tar.gz && \
-    tar -xzvf nginx-1.9.5.tar.gz && \
-    rm nginx-1.9.5.tar.gz
+# Download NGINX source (version 1.9.5)
+RUN wget https://nginx.org/download/nginx-1.9.5.tar.gz \
+ && tar -xzvf nginx-1.9.5.tar.gz \
+ && rm nginx-1.9.5.tar.gz
 
-# Download compatible njs source (adjust URL for specific version)
-RUN wget https://nginx.org/download/njs/njs-0.5.0.tar.gz && \
-    tar -xzvf njs-0.5.0.tar.gz && \
-    mv njs-0.5.0 nginx-1.9.5/njs && \
-    rm njs-0.5.0.tar.gz
-
-# Handle potential directory structure changes in njs
-RUN mv nginx-1.9.5/njs/nginx/conf/nginx.conf nginx-1.9.5/njs/config/nginx.conf
-
-# Install build dependencies (adjust based on your chosen base image)
-RUN apk add --no-cache build-base zlib-dev pcre-dev openssl-dev perl libxml2-dev libxslt-dev
-
-# Build stage
-FROM base AS builder
-
-# Copy NGINX configuration to enable JavaScript module
-COPY nginx.conf /etc/nginx/nginx.conf
+# Download latest njs source (adjust URL if needed)
+RUN wget https://github.com/nginx/njs/archive/refs/heads/master.tar.gz \
+ && tar -xzvf master.tar.gz \
+ && mv njs-master nginx-1.9.5/njs \
+ && rm master.tar.gz
 
 # Build NGINX with the JavaScript module
 WORKDIR /nginx-1.9.5
-RUN ./configure --add-module=../njs/nginx && make && make install
+RUN ./configure --add-module=../njs/nginx/nginx \
+ && make \
+ && make install
 
-# Final image (consider a multi-stage build for reduced size)
-FROM nginx:alpine AS final
+# Cleanup
+RUN rm -rf /nginx-1.9.5 /njs
 
-# Copy the JavaScript file
-COPY publish_message.js /etc/nginx/publish_message.js
+# Copy NGINX configuration to enable JavaScript module
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Expose port 80
 EXPOSE 80

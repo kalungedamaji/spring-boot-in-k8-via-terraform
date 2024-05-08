@@ -56,10 +56,10 @@ resource "kubernetes_replication_controller" "hello_world" {
         }
         container {
         port {
-                container_port = 8080
+                  container_port = 8080
                 }
             name  = "nginx-sidecar"
-            image = "dkalunge/nginx-sidecar-js-50:js"
+            image = "dkalunge/nginx-sidecar-js-700:js"
       }
     }
   }
