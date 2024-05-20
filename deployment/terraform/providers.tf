@@ -11,3 +11,7 @@ provider "kubernetes" {
   config_path    = "~/.kube/config"
   config_context = "minikube"
 }
+# Define the AWS provider configuration
+provider "aws" {
+  region = "us-west-2"  # Replace with your desired AWS region
+}
